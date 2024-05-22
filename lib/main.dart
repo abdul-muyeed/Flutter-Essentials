@@ -1,4 +1,27 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
+
+
+class GoogleProducts {
+  final List<String> items = [
+    'Cloud Functions',
+    'App Engine',
+    'Kubernetes Engine',
+    'Compute Engine',
+    'Bare Metal',
+    'Preemptible VMs',
+    'Shielded VMs',
+    'Sole-tenet Nodes',
+    'VMWare Engine',
+    'Cloud Firestore',
+    'Cloud Storage',
+    'Persistent Disk',
+    'Local SSD',
+    'Cloud Bigtable',
+    'Cloud Firestore',
+    'Cloud Memorystore',
+    'Cloud Spanner',
+  ];
+}
 
 void main() {
   runApp(const MyApp());
@@ -6,67 +29,138 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Flutter is awesome!",
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
+    const title = 'Google Products';
+    return const MaterialApp(
+      title: title,
+      debugShowCheckedModeBanner: false,
+      home: ProductHomeWidget(title),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
-  final List<String> items = ['January', 'February', 'March'];
+
+class ProductHomeWidget extends StatelessWidget {
+  final String title;
+
+  const ProductHomeWidget(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        title: const Text("Flutter Demo"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: const AppBarLeading(),
+
+        actions: const [
+          AppBarActionsShare(),
+        ],
+        title: Text(title, style: const TextStyle(color: Colors.black)),
       ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(items[index]),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyDetails(items[index])),
-                );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+      body: ProductListView(),
     );
   }
 }
+
+class AppBarLeading extends StatelessWidget {
+  const AppBarLeading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const IconButton(
+      icon: Icon(
+        Icons.menu,
+      ),
+      onPressed: null,
+    );
+  }
+}
+
+class AppBarActionsShare extends StatelessWidget {
+  const AppBarActionsShare({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        icon: const Icon(
+          Icons.share,
+        ),
+        onPressed: () {
+          const snackBar =
+              SnackBar(content: Text('You selected the Share Action'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        });
+  }
+}
+
+class ProductListView extends StatelessWidget {
+  final googleProducts = GoogleProducts();
+
+  ProductListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: googleProducts.items.length,
+      itemBuilder: (context, index) {
+        return ProductListTile(googleProducts.items[index]);
+      },
+    );
+  }
+}
+
+class ProductListTile extends StatelessWidget {
+  final String? productLabel;
+
+  const ProductListTile(this.productLabel, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text('$productLabel', style: const TextStyle(color: Colors.black)),
+      subtitle: const Text('SubTitle', style: TextStyle(color: Colors.black)),
+      leading: const Icon(Icons.help_center_outlined, color: Colors.black),
+
+      onTap: () {
+        final snackBar = SnackBar(content: Text('You selected $productLabel'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyDetails()),
+        );
+      },
+    );
+  }
+}
+
 
 class MyDetails extends StatelessWidget {
-  final String month;
-  const MyDetails(this.month, {super.key});
+  const MyDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
-     const title = 'Details Page';
+    const title = 'Details Page';
+
     return Scaffold(
+      // backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        title: const Text(title),
+        iconTheme: const IconThemeData(
+          color: Colors.grey, //change your color here
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        // leading: const AppBarLeading(),
+        actions: const [
+          AppBarActionsShare(),
+        ],
+        title: const Text(title, style: TextStyle(color: Colors.black)),
       ),
-      body: Text('You selected $month'),
+      
+      body: const Center(
+        child: Text('Hello Details Page')),
     );
   }
-}
+ }
