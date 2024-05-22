@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class GoogleProducts {
   final List<String> items = [
     'Cloud Functions',
@@ -8,7 +7,7 @@ class GoogleProducts {
     'Kubernetes Engine',
     'Compute Engine',
     'Bare Metal',
-    'Preemptible VMs',
+    'Pre-emtible VMs',
     'Shielded VMs',
     'Sole-tenet Nodes',
     'VMWare Engine',
@@ -40,7 +39,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class ProductHomeWidget extends StatelessWidget {
   final String title;
 
@@ -53,17 +51,21 @@ class ProductHomeWidget extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: const AppBarLeading(),
-
+        iconTheme: const IconThemeData(
+          color: Colors.grey, //change your color here
+        ),
         actions: const [
           AppBarActionsShare(),
         ],
         title: Text(title, style: const TextStyle(color: Colors.black)),
       ),
       body: ProductListView(),
+      
+      drawer: const MyDrawerWidget(),
     );
   }
 }
+
 
 class AppBarLeading extends StatelessWidget {
   const AppBarLeading({super.key});
@@ -90,11 +92,31 @@ class AppBarActionsShare extends StatelessWidget {
         ),
         onPressed: () {
           const snackBar =
-              SnackBar(content: Text('You selected the Share Action'));
+              SnackBar(content: Text('You selected the Action: Share'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         });
   }
 }
+
+
+// TODO: Enable Drawer
+class MyDrawerWidget extends StatelessWidget {
+  const MyDrawerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: const [
+          DrawerHeader(
+            child: Icon(Icons.flutter_dash, size: 35),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class ProductListView extends StatelessWidget {
   final googleProducts = GoogleProducts();
@@ -112,6 +134,7 @@ class ProductListView extends StatelessWidget {
   }
 }
 
+
 class ProductListTile extends StatelessWidget {
   final String? productLabel;
 
@@ -122,11 +145,9 @@ class ProductListTile extends StatelessWidget {
     return ListTile(
       title: Text('$productLabel', style: const TextStyle(color: Colors.black)),
       subtitle: const Text('SubTitle', style: TextStyle(color: Colors.black)),
-      leading: const Icon(Icons.help_center_outlined, color: Colors.black),
+      leading: const Icon(Icons.info, color: Colors.black),
 
       onTap: () {
-        final snackBar = SnackBar(content: Text('You selected $productLabel'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const MyDetails()),
@@ -138,29 +159,85 @@ class ProductListTile extends StatelessWidget {
 
 
 class MyDetails extends StatelessWidget {
+  final title = 'Details Page';
+
   const MyDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const title = 'Details Page';
-
     return Scaffold(
-      // backgroundColor: Colors.white,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.grey, //change your color here
+      backgroundColor: Colors.black,
+      body: DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: const IconThemeData(
+              color: Colors.grey, //change your color here
+            ),
+            title: Text(title, style: const TextStyle(color: Colors.grey)),
+            actions: const [
+              AppBarActionsShare(),
+            ],
+
+            bottom: const TabBar(
+              indicatorColor: Colors.black,
+              tabs: [
+                Tab(
+                  icon: Icon(Icons.home, color: Colors.grey),
+                  child: Text('Overview',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                ),
+                Tab(
+                  icon: Icon(Icons.favorite, color: Colors.grey),
+                  child: Text('Docs',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                ),
+                Tab(
+                  icon: Icon(Icons.list, color: Colors.grey),
+                  child: Text('Information',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                ),
+                Tab(
+                  icon: Icon(Icons.info, color: Colors.grey),
+                  child: Text('Other',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ),
+
+          body: const TabBarView(
+            children: [
+              SizedBox(
+                child: Center(
+                  child: Text('Tab Page 1'),
+                ),
+              ),
+              SizedBox(
+                child: Center(
+                  child: Text('Tab Page 2'),
+                ),
+              ),
+              SizedBox(
+                child: Center(
+                  child: Text('Tab Page 3'),
+                ),
+              ),
+              SizedBox(
+                child: Center(
+                  child: Text('Tab Page 4'),
+                ),
+              ),
+            ],
+          ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        // leading: const AppBarLeading(),
-        actions: const [
-          AppBarActionsShare(),
-        ],
-        title: const Text(title, style: TextStyle(color: Colors.black)),
       ),
-      
-      body: const Center(
-        child: Text('Hello Details Page')),
     );
   }
- }
+}
