@@ -9,19 +9,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       title: "Flutter is awesome!",
       theme: ThemeData(
         primarySwatch: Colors.blue,
-      
       ),
-      home: const MyHomePage(),
-    );  
+      home: MyHomePage(),
+    );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+  MyHomePage({super.key});
+  final List<String> items = ['January', 'February', 'March'];
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +31,42 @@ class MyHomePage extends StatelessWidget {
         foregroundColor: Colors.white,
         title: const Text("Flutter Demo"),
       ),
+      body: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(items[index]),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyDetails(items[index])),
+                );
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         child: const Icon(Icons.add),
       ),
-      
     );
+  }
+}
 
+class MyDetails extends StatelessWidget {
+  final String month;
+  const MyDetails(this.month, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+     const title = 'Details Page';
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        title: const Text(title),
+      ),
+      body: Text('You selected $month'),
+    );
   }
 }
